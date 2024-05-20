@@ -39,12 +39,16 @@ public class SpringSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //Aqui determinamos a que rutas se tiene permiso o denegacion de acceso
         return http.authorizeHttpRequests((authz) -> authz
-                        .requestMatchers(HttpMethod.GET,"/api/v1/usuarios").permitAll() //Permitimos el acceso a "/api/v1/usuarios"
-                        .requestMatchers(HttpMethod.POST,"/api/v1/registrar").permitAll() //Permitimos el acceso a "/api/v1/registrar"
-                        .anyRequest().authenticated())//las otras url las denegamos por solicitar autenticacion
+                        //Permitimos el acceso a "/api/v1/usuarios"
+                        .requestMatchers(HttpMethod.GET,"/api/v1/usuarios").permitAll()
+                        //Permitimos el acceso a "/api/v1/registrar"
+                        .requestMatchers(HttpMethod.POST,"/api/v1/registrar").permitAll()
+                        //las otras url las denegamos por solicitar autenticacion
+                        .anyRequest().authenticated())
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtValidationFilter(authenticationManager()))
-                .csrf(config -> config.disable())//Lo deshabilitamos ya que no nos conectaremos con un front
+                //Lo deshabilitamos ya que no nos conectaremos con un front
+                .csrf(config -> config.disable())
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
